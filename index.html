@@ -3,24 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Server</title>
-    <style>
-        body {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            color: #333;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            color: #0073e6;
-        }
-        p {
-            color: #666;
-        }
-    </style>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Colorful Website</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Welcome to My Web Server!</h1>
-    <p>This is a simple HTML page served by my web server.</p>
+    <header style="background-color: #4CAF50;">
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">My</span> Website</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" style="color: #fff;">Home</a></li>
+                    <li><a href="about.html" style="color: #fff;">About</a></li>
+                    <li><a href="services.html" style="color: #fff;">Services</a></li>
+                    <li><a href="contact.html" style="color: #fff;">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="showcase" style="background-color: #2196F3;">
+        <div class="container">
+            <h1>Welcome to My Website</h1>
+            <p>Creating beautiful, responsive websites made easy.</p>
+        </div>
+    </section>
+
+    <main class="container" style="background-color: #ffffff; color: #333;">
+        <h2>Main Content Section</h2>
+        <p>This is where your main content goes. You can add text, images, or any other elements you need.</p>
+    </main>
+
+    <footer style="background-color: #333; color: #fff;">
+        <p>&copy; 2025 My Website</p>
+    </footer>
 </body>
+</html>
