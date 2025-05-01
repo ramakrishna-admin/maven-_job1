@@ -75,7 +75,7 @@
                     name: `Product ${i}`,
                     description: `Description of product ${i}`,
                     price: Math.random() * 1000,
-                    image: `https://via.placeholder.com/200?text=Product+${i}`  // Using placeholder images
+                    image: `https://via.placeholder.com/200/09f/fff?text=Product+${i}`  // Using a public placeholder image URL
                 });
             }
             displayProducts();
@@ -110,99 +110,4 @@
         function updatePagination() {
             let totalPages = Math.ceil(products.length / productsPerPage);
 
-            // Show or hide the "Previous" and "Next" buttons
-            document.getElementById("prev-button").disabled = currentPage === 1;
-            document.getElementById("next-button").disabled = currentPage === totalPages;
-
-            // Display current page number
-            document.getElementById("page-number").innerText = `Page ${currentPage} of ${totalPages}`;
-        }
-
-        // Function to go to the next page
-        function nextPage() {
-            if (currentPage * productsPerPage < products.length) {
-                currentPage++;
-                displayProducts();
-            }
-        }
-
-        // Function to go to the previous page
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                displayProducts();
-            }
-        }
-
-        // Function to show a specific page (either Home or Admin)
-        function showPage(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page).classList.add('active');
-        }
-
-        // Function to add a new product
-        async function addProduct(event) {
-            event.preventDefault(); // Prevent the form from reloading the page
-
-            const name = document.getElementById("product-name").value;
-            const description = document.getElementById("product-description").value;
-            const price = document.getElementById("product-price").value;
-            const image = document.getElementById("product-image").value;
-
-            const newProduct = {
-                name: name,
-                description: description,
-                price: parseFloat(price),
-                image: image // Allowing user to input an image URL
-            };
-
-            // In a real application, here we would send this data to a backend API
-            products.push(newProduct); // Simulate adding product to the list
-            alert("Product added successfully!");
-            showPage('home'); // Switch back to home page
-            displayProducts(); // Refresh product list
-        }
-
-        window.onload = function() {
-            // Initially, show the home page and load the products
-            showPage('home');
-            fetchProducts();
-        }
-    </script>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <div class="nav-bar">
-        <a href="javascript:void(0);" onclick="showPage('home')">Home</a>
-        <a href="javascript:void(0);" onclick="showPage('admin')">Admin</a>
-    </div>
-
-    <!-- Home Page (Product List) -->
-    <div id="home" class="page active">
-        <h1>Welcome to Flipkart Clone</h1>
-        <h2>Available Products</h2>
-        <div id="product-list"></div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            <button id="prev-button" onclick="prevPage()">Previous</button>
-            <span id="page-number">Page 1 of 1</span>
-            <button id="next-button" onclick="nextPage()">Next</button>
-        </div>
-    </div>
-
-    <!-- Admin Page (Add Product) -->
-    <div id="admin" class="page">
-        <h1>Admin - Add a New Product</h1>
-        <div class="form-container">
-            <form id="add-product-form" onsubmit="addProduct(event)">
-                <input type="text" id="product-name" placeholder="Product Name" required>
-                <input type="text" id="product-description" placeholder="Product Description" required>
-                <input type="number" id="product-price" placeholder="Product Price" required>
-                <input type="text" id="product-image" placeholder="Product Image URL" required>
-                <button type="submit">Add Product</button>
-            </form>
-        </div>
-    </div>
-</body>
-</html>
+            // Show or hide the "
