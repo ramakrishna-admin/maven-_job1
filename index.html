@@ -3,48 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flipkart Clone</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Flipkart Clone – Paginated</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f1f3f6;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #2874f0;
+      padding: 10px 20px;
+      color: white;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .search-bar {
+      flex: 1;
+      margin: 0 20px;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .login-btn {
+      background-color: white;
+      color: #2874f0;
+      border: none;
+      padding: 8px 14px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product-card {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .product-card h3 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+
+    .product-card p {
+      font-size: 14px;
+      font-weight: bold;
+      color: #388e3c;
+    }
+
+    .product-card button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #ff9f00;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .pagination {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .page-btn {
+      text-decoration: none;
+      background-color: #2874f0;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Navbar -->
   <header class="navbar">
     <div class="logo">Flipkart</div>
     <input type="text" placeholder="Search for products, brands and more" class="search-bar" />
     <button class="login-btn">Login</button>
   </header>
 
-  <!-- Product Grid -->
-  <main class="product-grid">
-    <div class="product-card">
-      <img src="https://picsum.photos/300/200?random=1" alt="Product 1" />
-      <h3>Smartphone</h3>
-      <p>₹12,499</p>
-      <button>Add to Cart</button>
-    </div>
+  <main class="product-grid" id="productGrid"></main>
 
-    <div class="product-card">
-      <img src="https://picsum.photos/300/200?random=2" alt="Product 2" />
-      <h3>Running Shoes</h3>
-      <p>₹1,999</p>
-      <button>Add to Cart</button>
-    </div>
+  <div class="pagination">
+    <button class="page-btn" onclick="changePage(-1)">← Back</button>
+    <button class="page-btn" onclick="changePage(1)">Next →</button>
+  </div>
 
-    <div class="product-card">
-      <img src="https://picsum.photos/300/200?random=3" alt="Product 3" />
-      <h3>Casual T-shirt</h3>
-      <p>₹499</p>
-      <button>Add to Cart</button>
-    </div>
+  <script>
+    const products = [
+      { title: "Smartphone", price: "₹12,499", img: "https://picsum.photos/300/200?random=1" },
+      { title: "Running Shoes", price: "₹1,999", img: "https://picsum.photos/300/200?random=2" },
+      { title: "Casual T-shirt", price: "₹499", img: "https://picsum.photos/300/200?random=3" },
+      { title: "HP Laptop", price: "₹43,990", img: "https://picsum.photos/300/200?random=4" },
+      { title: "Bluetooth Earbuds", price: "₹1,499", img: "https://picsum.photos/300/200?random=5" },
+      { title: "Wrist Watch", price: "₹899", img: "https://picsum.photos/300/200?random=6" },
+      { title: "Wireless Mouse", price: "₹499", img: "https://picsum.photos/300/200?random=7" },
+      { title: "Backpack", price: "₹1,299", img: "https://picsum.photos/300/200?random=8" }
+    ];
 
-    <div class="product-card">
-      <img src="https://picsum.photos/300/200?random=4" alt="Product 4" />
-      <h3>HP Laptop</h3>
-      <p>₹43,990</p>
-      <button>Add to Cart</button>
-    </div>
-  </main>
+    let currentPage = 0;
+    const itemsPerPage = 4;
 
-  <script src="script.js"></script>
+    function renderProducts() {
+      const grid = document.getElementById("productGrid");
+      grid.innerHTML = "";
+
+      const start = currentPage * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = products.slice(start, end);
+
+      pageItems.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.title}" />
+          <h3>${p.title}</h3>
+          <p>${p.price}</p>
+          <button>Add to Cart</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function changePage(direction) {
+      const totalPages = Math.ceil(products.length / itemsPerPage);
+      currentPage += direction;
+      if (currentPage < 0) currentPage = 0;
+      if (currentPage >= totalPages) currentPage = totalPages - 1;
+      renderProducts();
+    }
+
+    renderProducts();
+  </script>
 </body>
 </html>
