@@ -1,175 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Flipkart Clone – Paginated</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f1f3f6;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .product {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            width: 100%;
+        }
+        .nav-bar {
+            margin-bottom: 20px;
+        }
+        .nav-bar a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .page {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .pagination button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+    <script>
+        let products = [];  // Simulating a list of all products
+        let currentPage = 1;  // Current page number
+        const productsPerPage = 9;  // Number of products per page
 
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #2874f0;
-      padding: 10px 20px;
-      color: white;
-    }
+        // Simulating fetching products
+        async function fetchProducts() {
+            // Normally, this data would come from a backend API (Flask)
+            products = [];
+            for (let i = 1; i <= 50; i++) {
+                products.push({name: `Product ${i}`, description: `Description of product ${i}`, price: Math.random() * 1000});
+            }
+            displayProducts();
+        }
 
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
+        // Function to display products based on the current page
+        function displayProducts() {
+            let startIndex = (currentPage - 1) * productsPerPage;
+            let endIndex = startIndex + productsPerPage;
+            let productsToDisplay = products.slice(startIndex, endIndex);
 
-    .search-bar {
-      flex: 1;
-      margin: 0 20px;
-      padding: 8px;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-    }
+            let productList = document.getElementById("product-list");
+            productList.innerHTML = ""; // Clear previous content
 
-    .login-btn {
-      background-color: white;
-      color: #2874f0;
-      border: none;
-      padding: 8px 14px;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+            productsToDisplay.forEach(product => {
+                let productDiv = document.createElement("div");
+                productDiv.classList.add("product");
+                productDiv.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p>Price: ₹${product.price.toFixed(2)}</p>
+                `;
+                productList.appendChild(productDiv);
+            });
 
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
+            // Update pagination buttons
+            updatePagination();
+        }
 
-    .product-card {
-      background-color: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.2s;
-    }
+        // Function to handle page navigation
+        function updatePagination() {
+            let totalPages = Math.ceil(products.length / productsPerPage);
 
-    .product-card:hover {
-      transform: scale(1.03);
-    }
+            // Show or hide the "Previous" and "Next" buttons
+            document.getElementById("prev-button").disabled = currentPage === 1;
+            document.getElementById("next-button").disabled = currentPage === totalPages;
 
-    .product-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
+            // Display current page number
+            document.getElementById("page-number").innerText = `Page ${currentPage} of ${totalPages}`;
+        }
 
-    .product-card h3 {
-      font-size: 16px;
-      margin: 10px 0 5px;
-    }
+        // Function to go to the next page
+        function nextPage() {
+            if (currentPage * productsPerPage < products.length) {
+                currentPage++;
+                displayProducts();
+            }
+        }
 
-    .product-card p {
-      font-size: 14px;
-      font-weight: bold;
-      color: #388e3c;
-    }
+        // Function to go to the previous page
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayProducts();
+            }
+        }
 
-    .product-card button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      background-color: #ff9f00;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      cursor: pointer;
-    }
+        // Function to show a specific page (either Home or Admin)
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+        }
 
-    .pagination {
-      text-align: center;
-      margin: 30px 0;
-    }
+        // Function to add a new product
+        async function addProduct(event) {
+            event.preventDefault(); // Prevent the form from reloading the page
 
-    .page-btn {
-      text-decoration: none;
-      background-color: #2874f0;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      margin: 0 10px;
-    }
-  </style>
+            const name = document.getElementById("product-name").value;
+            const description = document.getElementById("product-description").value;
+            const price = document.getElementById("product-price").value;
+
+            const newProduct = {
+                name: name,
+                description: description,
+                price: parseFloat(price)
+            };
+
+            // In a real application, here we would send this data to a backend API
+            products.push(newProduct); // Simulate adding product to the list
+            alert("Product added successfully!");
+            showPage('home'); // Switch back to home page
+            displayProducts(); // Refresh product list
+        }
+
+        window.onload = function() {
+            // Initially, show the home page and load the products
+            showPage('home');
+            fetchProducts();
+        }
+    </script>
 </head>
 <body>
-  <header class="navbar">
-    <div class="logo">Flipkart</div>
-    <input type="text" placeholder="Search for products, brands and more" class="search-bar" />
-    <button class="login-btn">Login</button>
-  </header>
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <a href="javascript:void(0);" onclick="showPage('home')">Home</a>
+        <a href="javascript:void(0);" onclick="showPage('admin')">Admin</a>
+    </div>
 
-  <main class="product-grid" id="productGrid"></main>
+    <!-- Home Page (Product List) -->
+    <div id="home" class="page active">
+        <h1>Welcome to Flipkart Clone</h1>
+        <h2>Available Products</h2>
+        <div id="product-list"></div>
 
-  <div class="pagination">
-    <button class="page-btn" onclick="changePage(-1)">← Back</button>
-    <button class="page-btn" onclick="changePage(1)">Next →</button>
-  </div>
+        <!-- Pagination -->
+        <div class="pagination">
+            <button id="prev-button" onclick="prevPage()">Previous</button>
+            <span id="page-number">Page 1 of 1</span>
+            <button id="next-button" onclick="nextPage()">Next</button>
+        </div>
+    </div>
 
-  <script>
-    const products = [
-      { title: "Smartphone", price: "₹12,499", img: "https://picsum.photos/300/200?random=1" },
-      { title: "Running Shoes", price: "₹1,999", img: "https://picsum.photos/300/200?random=2" },
-      { title: "Casual T-shirt", price: "₹499", img: "https://picsum.photos/300/200?random=3" },
-      { title: "HP Laptop", price: "₹43,990", img: "https://picsum.photos/300/200?random=4" },
-      { title: "Bluetooth Earbuds", price: "₹1,499", img: "https://picsum.photos/300/200?random=5" },
-      { title: "Wrist Watch", price: "₹899", img: "https://picsum.photos/300/200?random=6" },
-      { title: "Wireless Mouse", price: "₹499", img: "https://picsum.photos/300/200?random=7" },
-      { title: "Backpack", price: "₹1,299", img: "https://picsum.photos/300/200?random=8" }
-    ];
-
-    let currentPage = 0;
-    const itemsPerPage = 4;
-
-    function renderProducts() {
-      const grid = document.getElementById("productGrid");
-      grid.innerHTML = "";
-
-      const start = currentPage * itemsPerPage;
-      const end = start + itemsPerPage;
-      const pageItems = products.slice(start, end);
-
-      pageItems.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-          <img src="${p.img}" alt="${p.title}" />
-          <h3>${p.title}</h3>
-          <p>${p.price}</p>
-          <button>Add to Cart</button>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function changePage(direction) {
-      const totalPages = Math.ceil(products.length / itemsPerPage);
-      currentPage += direction;
-      if (currentPage < 0) currentPage = 0;
-      if (currentPage >= totalPages) currentPage = totalPages - 1;
-      renderProducts();
-    }
-
-    renderProducts();
-  </script>
+    <!-- Admin Page (Add Product) -->
+    <div id="admin" class="page">
+        <h1>Admin - Add a New Product</h1>
+        <div class="form-container">
+            <form id="add-product-form" onsubmit="addProduct(event)">
+                <input type="text" id="product-name" placeholder="Product Name" required>
+                <input type="text" id="product-description" placeholder="Product Description" required>
+                <input type="number" id="product-price" placeholder="Product Price" required>
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
