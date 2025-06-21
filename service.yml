@@ -6,8 +6,9 @@ metadata:
 spec:
   selector:
     app: tetris
+  type: NodePort
   ports:
-  - protocol: TCP
-    port: 80                 # Expose port 80
-    targetPort: 3000
-  type: LoadBalancer
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 30080   # Optional, or let Kubernetes auto-assign
