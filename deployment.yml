@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: tetris
-        image: shaikmustafa/shammu:devops
+        image: ramakrishna737/game:v1
         ports:
         - containerPort: 3000
